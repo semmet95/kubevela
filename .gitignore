@@ -54,3 +54,6 @@ git-page/
 vela.json
 
 dist/
+
+# generated sdk
+kubevela-go-sdk/
