@@ -16,7 +16,7 @@ jobs:
   core-api-test:
     runs-on: ubuntu-22.04
     steps:
-      - name: Set up Go 1.23.8
+      - name: Setup Go
         uses: actions/setup-go@v5
         env:
           GO_VERSION: '1.23.8'
