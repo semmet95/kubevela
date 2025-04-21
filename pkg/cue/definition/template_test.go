@@ -1572,7 +1572,7 @@ parameter: {
 }
 
 func TestWorkloadParamsValidations(t *testing.T) {
-	defer featuregatetesting.SetFeatureGateDuringTest(&testing.T{}, utilfeature.DefaultFeatureGate, features.EnableCueValidation, true)()
+	defer featuregatetesting.SetFeatureGateDuringTest(&testing.T{}, utilfeature.DefaultFeatureGate, features.EnableCueValidation, true)
 	testCases := map[string]struct {
 		workloadTemplate string
 		params           map[string]interface{}
