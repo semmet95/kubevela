@@ -37,6 +37,9 @@ jobs:
         id: get_version
         run: echo "VERSION=${GITHUB_REF}" >> $GITHUB_OUTPUT
 
+      - name: Setup KinD with Kubernetes
+        uses: ./.github/actions/setup-kind-cluster
+
       - name: Sync SDK to kubevela/kubevela-go-sdk
         run: bash ./hack/sdk/sync.sh
         env:
