@@ -19,5 +19,6 @@
 				"cuelangorg.vscode-cue"
 			]
 		}
-	}
+	},
+	"postCreateCommand": "bash .devcontainer/setup-aliases.sh"
 }
