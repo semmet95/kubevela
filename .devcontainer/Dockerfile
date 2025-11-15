@@ -11,11 +11,14 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# install golangci-lint
-RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin ${GOLANGCILINT_VERSION}
-
 # install kubectl
 RUN curl -LO "https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl" -v \
     && chmod +x ./kubectl \
     && mv ./kubectl /usr/local/bin/kubectl \
     && kubectl version --client=true
+
+# install mage
+RUN go install github.com/magefile/mage@latest
+
+# install golangci-lint
+RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin ${GOLANGCILINT_VERSION}
