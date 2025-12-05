@@ -373,6 +373,7 @@ func (h *AppHandler) applyComponentFunc(appParser *appfile.Parser, af *appfile.A
 		isHealth := true
 		if utilfeature.DefaultMutableFeatureGate.Enabled(features.MultiStageComponentApply) {
 			manifestDispatchers, err := h.generateDispatcher(appRev, readyWorkload, readyTraits, overrideNamespace, af.AppAnnotations)
+
 			if err != nil {
 				return nil, nil, false, errors.WithMessage(err, "generateDispatcher")
 			}
@@ -430,6 +431,26 @@ func (h *AppHandler) prepareWorkloadAndManifests(ctx context.Context,
 		return nil, nil, errors.WithMessage(err, "ParseWorkload")
 	}
 	wl.Patch = patcher
+
+	if utilfeature.DefaultMutableFeatureGate.Enabled(features.MultiStageComponentApply) {
+		serviceHealthy := false
+		for _, svc := range h.services {
+			if svc.Name == comp.Name {
+				serviceHealthy = svc.Healthy
+				break
+			}
+		}
+		if !serviceHealthy {
+			nonPostDispatchTraits := []*appfile.Trait{}
+			for _, trait := range wl.Traits {
+				if trait.FullTemplate.TraitDefinition.Spec.Stage != v1beta1.PostDispatch {
+					nonPostDispatchTraits = append(nonPostDispatchTraits, trait)
+				}
+			}
+			wl.Traits = nonPostDispatchTraits
+		}
+	}
+
 	manifest, err := af.GenerateComponentManifest(wl, func(ctxData *velaprocess.ContextData) {
 		if ns := componentNamespaceFromContext(ctx); ns != "" {
 			ctxData.Namespace = ns

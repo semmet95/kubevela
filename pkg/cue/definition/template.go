@@ -239,9 +239,34 @@ func (td *traitDef) Complete(ctx process.Context, abstractTemplate string, param
 			buff += fmt.Sprintf("%s: %s\n", velaprocess.ParameterFieldName, string(bt))
 		}
 	}
+	var statusBytes []byte
+	if output := ctx.GetData(OutputFieldName); output != nil {
+		var outputMap map[string]interface{}
+		if m, ok := output.(map[string]interface{}); ok {
+			outputMap = m
+		} else if ptr, ok := output.(*interface{}); ok && ptr != nil {
+			if m, ok := (*ptr).(map[string]interface{}); ok {
+				outputMap = m
+			}
+		}
+
+		if outputMap != nil {
+			if status, ok := outputMap["status"]; ok {
+				if b, err := json.Marshal(status); err == nil {
+					statusBytes = b
+				}
+			}
+		}
+	}
+
 	c, err := ctx.BaseContextFile()
 	if err != nil {
 		return err
+	}
+
+	if len(statusBytes) > 0 {
+		replacement := fmt.Sprintf("\"output\":{\"status\":%s,", string(statusBytes))
+		c = strings.Replace(c, "\"output\":{", replacement, 1)
 	}
 	buff += c
 
@@ -373,8 +398,8 @@ func (td *traitDef) getTemplateContext(ctx process.Context, cli client.Reader, a
 	baseLabels := GetBaseContextLabels(ctx)
 	var root = initRoot(baseLabels)
 	var commonLabels = GetCommonLabels(baseLabels)
-
 	_, assists := ctx.Output()
+
 	outputs := make(map[string]interface{})
 	for _, assist := range assists {
 		if assist.Type != td.name {
