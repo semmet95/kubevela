@@ -159,7 +159,9 @@ func (h *AppHandler) generateDispatcher(appRev *v1beta1.ApplicationRevision, rea
 						status.Message = "waiting for previous stage healthy"
 					}
 					h.addServiceStatus(true, *status)
-				}
+				} // else if options.Stage == PostDispatch {
+				// 	h.addServiceStatus(false, *status)
+				// }
 				if !isHealth {
 					return false, nil
 				}
@@ -196,6 +198,9 @@ func (h *AppHandler) generateDispatcher(appRev *v1beta1.ApplicationRevision, rea
 	if _, ok := traitStageMap[DefaultDispatch]; !ok {
 		traitStageMap[DefaultDispatch] = []*unstructured.Unstructured{}
 	}
+	// if _, ok := traitStageMap[PostDispatch]; !ok {
+	// 	traitStageMap[PostDispatch] = []*unstructured.Unstructured{}
+	// }
 	for stage, traits := range traitStageMap {
 		option := DispatchOptions{
 			Stage:             stage,

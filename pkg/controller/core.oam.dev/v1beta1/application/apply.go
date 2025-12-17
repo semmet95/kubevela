@@ -365,6 +365,26 @@ collectNext:
 		}
 		status.Traits = oldStatus
 	}
+
+	var appComp common.ApplicationComponent
+	// get the current app comp
+	for _, c := range h.app.Spec.Components {
+		if c.Name == comp.Name {
+			appComp = c
+			break
+		}
+	}
+	// if there are unrendered traits set as unhealthy
+	if len(comp.Traits) != len(appComp.Traits) {
+		isHealth = false
+		
+		var renderedTraits = make(map[string]bool)
+		for _, t := range comp.Traits {
+			renderedTraits[t.FullTemplate.Reference.Type] = true
+		}
+
+	}
+	
 	status.Traits = append(status.Traits, traitStatusList...)
 	h.addServiceStatus(true, status)
 	return &status, output, outputs, isHealth, nil
