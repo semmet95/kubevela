@@ -344,6 +344,15 @@ func (h *AppHandler) checkComponentHealth(appParser *appfile.Parser, af *appfile
 			return false, nil, nil, nil, err
 		}
 
+		for _, compSvcStatus := range h.app.Status.Services {
+			if compSvcStatus.Name == comp.Name {
+				if len(comp.Traits) != len(compSvcStatus.Traits) {
+					isHealth = false
+					break
+				}
+			}
+		}
+
 		return isHealth, status, output, outputs, err
 	}
 }
