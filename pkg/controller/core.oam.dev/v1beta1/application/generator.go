@@ -434,7 +434,7 @@ func (h *AppHandler) prepareWorkloadAndManifests(ctx context.Context,
 	// Add all traits to the workload if MultiStageComponentApply is disabled
 	if utilfeature.DefaultMutableFeatureGate.Enabled(features.MultiStageComponentApply) {
 		serviceHealthy := false
-		for _, svc := range h.services {
+		for _, svc := range h.app.Status.Services {
 			if svc.Name == comp.Name {
 				serviceHealthy = svc.Healthy
 				break
