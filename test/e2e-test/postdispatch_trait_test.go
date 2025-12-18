@@ -18,6 +18,8 @@ package controllers_test
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"time"
 
 	. "github.com/onsi/ginkgo/v2"
@@ -51,7 +53,7 @@ var _ = Describe("PostDispatch Trait tests", func() {
 	})
 
 	Context("Test PostDispatch status for trait, component and application", func() {
-		It("Should mark application, component, and PostDispatch traits healthy", func() {
+		FIt("Should mark application, component, and PostDispatch traits healthy", func() {
 			deploymentTraitName := "test-deployment-trait-" + randomNamespaceName("")
 			cmTraitName := "test-cm-trait-" + randomNamespaceName("")
 
@@ -193,6 +195,9 @@ isHealth: *_isHealth | bool
 			}
 			DeferCleanup(func() { _ = k8sClient.Delete(ctx, app) })
 
+			fmt.Println("--------------------applying application--------------------")
+			b, _ := json.Marshal(app)
+			fmt.Println(string(b))
 			By("Creating application that uses PostDispatch traits")
 			Expect(k8sClient.Create(ctx, app)).Should(Succeed())
 

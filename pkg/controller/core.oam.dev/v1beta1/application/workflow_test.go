@@ -314,7 +314,7 @@ var _ = Describe("Test Workflow", func() {
 		Expect(appObj.Status.Phase).Should(BeEquivalentTo(common.ApplicationWorkflowTerminated))
 	})
 
-	It("test application with input/output and workflow", func() {
+	FIt("test application with input/output and workflow", func() {
 		ns := corev1.Namespace{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: "app-with-inout-workflow",
@@ -406,6 +406,12 @@ var _ = Describe("Test Workflow", func() {
 		testutil.ReconcileOnce(reconciler, reconcile.Request{NamespacedName: appKey})
 
 		expDeployment = &appsv1.Deployment{}
+
+		time.Sleep(30 * time.Second)
+		k8sClient.Get(ctx, appKey, checkApp)
+		fmt.Println("----------------app status---------------")
+		fmt.Println(checkApp)
+
 		Expect(k8sClient.Get(ctx, web1Key, expDeployment)).Should(BeNil())
 		expDeployment.Status.Replicas = 1
 		expDeployment.Status.ReadyReplicas = 1
