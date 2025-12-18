@@ -3911,6 +3911,7 @@ var _ = Describe("Test Application Controller", func() {
 		appWithPreDispatch.Name = "app-with-pre-dispatch"
 		appWithPreDispatch.SetNamespace(ns.Name)
 		Expect(k8sClient.Create(ctx, appWithPreDispatch)).Should(BeNil())
+		time.Sleep(10*time.Second)
 
 		appKey := client.ObjectKey{
 			Name:      appWithPreDispatch.Name,
