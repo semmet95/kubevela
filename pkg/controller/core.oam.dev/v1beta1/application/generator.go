@@ -435,7 +435,7 @@ func (h *AppHandler) prepareWorkloadAndManifests(ctx context.Context,
 	if utilfeature.DefaultMutableFeatureGate.Enabled(features.MultiStageComponentApply) {
 		serviceHealthy := false
 		needPostDispatchOutputs := componentOutputsConsumed(comp, af.Components)
-		for _, svc := range h.services {
+		for _, svc := range h.app.Status.Services {
 			if svc.Name == comp.Name {
 				serviceHealthy = svc.Healthy
 				break

@@ -139,6 +139,23 @@ func (h *AppHandler) generateDispatcher(appRev *v1beta1.ApplicationRevision, rea
 		dispatcher.run = func(ctx context.Context, comp *appfile.Component, appRev *v1beta1.ApplicationRevision, clusterName string) (bool, error) {
 			skipWorkload, dispatchManifests := assembleManifestFn(comp.SkipApplyWorkload)
 
+			// For PostDispatch stage, check if the component/service is healthy first
+			if options.Stage == PostDispatch {
+				// Check component health status from h.services (populated during workflow execution)
+				componentHealthy := false
+				for _, svc := range h.app.Status.Services {
+					if svc.Name == comp.Name {
+						componentHealthy = svc.Healthy
+						break
+					}
+				}
+
+				// If component is not healthy, return false to signal workflow should retry
+				if !componentHealthy {
+					return false, nil
+				}
+			}
+
 			var isAutoUpdateEnabled bool
 			if annotations[oam.AnnotationAutoUpdate] == "true" {
 				isAutoUpdateEnabled = true
