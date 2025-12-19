@@ -17,6 +17,8 @@ limitations under the License.
 package addon
 
 import (
+	"path"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -318,4 +320,13 @@ func TestTokenSource(t *testing.T) {
 		assert.Equal(t, "test-secret", source.GetTokenSecretRef())
 		assert.Equal(t, "", source.GetToken())
 	})
+}
+
+// pathWithParent joins path with its parent directory, suffix slash is reserved
+func pathWithParent(subPath, parent string) string {
+	actualPath := path.Join(parent, subPath)
+	if strings.HasSuffix(subPath, "/") {
+		actualPath += "/"
+	}
+	return actualPath
 }
