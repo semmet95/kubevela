@@ -141,17 +141,8 @@ func (h *AppHandler) generateDispatcher(appRev *v1beta1.ApplicationRevision, rea
 
 			// For PostDispatch stage, check if the component/service is healthy first
 			if options.Stage == PostDispatch {
-				// Check component health status from h.services (populated during workflow execution)
-				componentHealthy := false
-				for _, svc := range h.app.Status.Services {
-					if svc.Name == comp.Name {
-						componentHealthy = svc.Healthy
-						break
-					}
-				}
-
 				// If component is not healthy, return false to signal workflow should retry
-				if !componentHealthy {
+				if !oamutil.IsCompSvcHealthy(ctx, comp.Name, h.app.Status.Services) {
 					return false, nil
 				}
 			}
@@ -213,6 +204,16 @@ func (h *AppHandler) generateDispatcher(appRev *v1beta1.ApplicationRevision, rea
 	if _, ok := traitStageMap[DefaultDispatch]; !ok {
 		traitStageMap[DefaultDispatch] = []*unstructured.Unstructured{}
 	}
+	// Ensure PostDispatch stage exists, if there's any PostDispatch trait
+	for _, t := range appRev.Spec.TraitDefinitions {
+		if t.Spec.Stage == v1beta1.PostDispatch {
+			if _, ok := traitStageMap[PostDispatch]; !ok {
+				traitStageMap[PostDispatch] = []*unstructured.Unstructured{}
+			}
+			break
+		}
+	}
+
 	for stage, traits := range traitStageMap {
 		option := DispatchOptions{
 			Stage:             stage,

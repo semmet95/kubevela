@@ -877,3 +877,12 @@ func GetResourceFromObj(ctx context.Context, pctx process.Context, obj *unstruct
 	}
 	return nil, errors.Errorf("no resources found gvk(%v) labels(%v)", obj.GroupVersionKind(), labels)
 }
+
+func IsCompSvcHealthy(tx context.Context, compName string, svcStatuses []common.ApplicationComponentStatus) bool {
+	for _, svc := range svcStatuses {
+		if svc.Name == compName {
+			return svc.Healthy
+		}
+	}
+	return false
+}

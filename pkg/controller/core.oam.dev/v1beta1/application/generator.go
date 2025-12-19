@@ -344,6 +344,15 @@ func (h *AppHandler) checkComponentHealth(appParser *appfile.Parser, af *appfile
 			return false, nil, nil, nil, err
 		}
 
+		for _, compSvcStatus := range h.app.Status.Services {
+			if compSvcStatus.Name == comp.Name {
+				if len(comp.Traits) != len(compSvcStatus.Traits) {
+					isHealth = false
+					break
+				}
+			}
+		}
+
 		return isHealth, status, output, outputs, err
 	}
 }
@@ -433,15 +442,7 @@ func (h *AppHandler) prepareWorkloadAndManifests(ctx context.Context,
 
 	// Add all traits to the workload if MultiStageComponentApply is disabled
 	if utilfeature.DefaultMutableFeatureGate.Enabled(features.MultiStageComponentApply) {
-		serviceHealthy := false
-		needPostDispatchOutputs := componentOutputsConsumed(comp, af.Components)
-		for _, svc := range h.app.Status.Services {
-			if svc.Name == comp.Name {
-				serviceHealthy = svc.Healthy
-				break
-			}
-		}
-		if !serviceHealthy && !needPostDispatchOutputs {
+		if !util.IsCompSvcHealthy(ctx, comp.Name, h.app.Status.Services) {
 			nonPostDispatchTraits := []*appfile.Trait{}
 			for _, trait := range wl.Traits {
 				if trait.FullTemplate.TraitDefinition.Spec.Stage != v1beta1.PostDispatch {
@@ -520,31 +521,6 @@ func renderComponentsAndTraits(manifest *types.ComponentManifest, appRev *v1beta
 	}
 	readyTraits = redirectTraitToLocalIfNeed(appRev, readyTraits)
 	return readyWorkload, readyTraits, nil
-}
-
-// componentOutputsConsumed returns true if any other component depends on outputs produced
-// from PostDispatch traits (valueFrom starting with "outputs.").
-func componentOutputsConsumed(comp common.ApplicationComponent, components []common.ApplicationComponent) bool {
-	outputNames := map[string]struct{}{}
-	for _, o := range comp.Outputs {
-		if strings.HasPrefix(o.ValueFrom, "outputs.") {
-			outputNames[o.Name] = struct{}{}
-		}
-	}
-	if len(outputNames) == 0 {
-		return false
-	}
-	for _, c := range components {
-		if c.Name == comp.Name {
-			continue
-		}
-		for _, in := range c.Inputs {
-			if _, ok := outputNames[in.From]; ok {
-				return true
-			}
-		}
-	}
-	return false
 }
 
 func checkSkipApplyWorkload(comp *appfile.Component) {
