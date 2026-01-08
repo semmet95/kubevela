@@ -503,6 +503,7 @@ var _ = Describe("Test Application Controller", func() {
 			Namespace: appwithNoTrait.Namespace,
 		}
 		testutil.ReconcileOnceAfterFinalizer(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 		By("Check Application Created")
 		checkApp := &v1beta1.Application{}
 		Expect(k8sClient.Get(ctx, appKey, checkApp)).Should(BeNil())
@@ -565,6 +566,7 @@ var _ = Describe("Test Application Controller", func() {
 			Namespace: appRefertoWd.Namespace,
 		}
 		testutil.ReconcileOnceAfterFinalizer(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 		By("Check Application Created with the correct revision")
 		curApp := &v1beta1.Application{}
 		Expect(k8sClient.Get(ctx, appKey, curApp)).Should(BeNil())
@@ -614,6 +616,7 @@ var _ = Describe("Test Application Controller", func() {
 			Namespace: appMix.Namespace,
 		}
 		testutil.ReconcileOnceAfterFinalizer(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 		By("Check Application Created with the correct revision")
 		curApp := &v1beta1.Application{}
 		Expect(k8sClient.Get(ctx, appKey, curApp)).Should(BeNil())
@@ -729,6 +732,7 @@ var _ = Describe("Test Application Controller", func() {
 			Namespace: app.Namespace,
 		}
 		testutil.ReconcileOnceAfterFinalizer(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 		By("Check Application Created with the correct revision")
 		curApp := &v1beta1.Application{}
 		Expect(k8sClient.Get(ctx, appKey, curApp)).Should(BeNil())
@@ -1041,6 +1045,7 @@ var _ = Describe("Test Application Controller", func() {
 		Expect(k8sClient.Status().Update(ctx, expDeployment)).Should(BeNil())
 
 		testutil.ReconcileOnce(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 
 		Expect(k8sClient.Get(ctx, web3Key, expDeployment)).Should(BeNil())
 
@@ -1146,6 +1151,7 @@ var _ = Describe("Test Application Controller", func() {
 		Expect(k8sClient.Status().Update(ctx, expDeployment)).Should(BeNil())
 
 		testutil.ReconcileOnce(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 
 		Expect(k8sClient.Get(ctx, web3Key, expDeployment)).Should(BeNil())
 
@@ -1248,6 +1254,7 @@ var _ = Describe("Test Application Controller", func() {
 		Expect(k8sClient.Status().Update(ctx, expDeployment)).Should(BeNil())
 
 		testutil.ReconcileOnce(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 
 		Expect(k8sClient.Get(ctx, web2Key, expDeployment)).Should(util.NotFoundMatcher{})
 		Expect(k8sClient.Get(ctx, web3Key, expDeployment)).Should(BeNil())
@@ -1333,6 +1340,7 @@ var _ = Describe("Test Application Controller", func() {
 		Expect(k8sClient.Get(ctx, web2Key, expDeployment)).Should(util.NotFoundMatcher{})
 
 		testutil.ReconcileOnce(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 
 		Expect(k8sClient.Get(ctx, web2Key, expDeployment)).Should(BeNil())
 
@@ -1424,6 +1432,7 @@ var _ = Describe("Test Application Controller", func() {
 
 		time.Sleep(time.Second)
 		testutil.ReconcileOnce(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 
 		Expect(k8sClient.Get(ctx, web2Key, expDeployment)).Should(BeNil())
 
@@ -1607,6 +1616,7 @@ var _ = Describe("Test Application Controller", func() {
 		Expect(k8sClient.Get(ctx, web2Key, expDeployment)).Should(util.NotFoundMatcher{})
 
 		testutil.ReconcileOnce(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 
 		Expect(k8sClient.Get(ctx, web2Key, expDeployment)).Should(util.NotFoundMatcher{})
 
@@ -1700,6 +1710,7 @@ var _ = Describe("Test Application Controller", func() {
 		Expect(k8sClient.Get(ctx, web2Key, expDeployment)).Should(util.NotFoundMatcher{})
 
 		testutil.ReconcileOnce(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 
 		Expect(k8sClient.Get(ctx, web2Key, expDeployment)).Should(util.NotFoundMatcher{})
 
@@ -2751,6 +2762,7 @@ var _ = Describe("Test Application Controller", func() {
 
 		time.Sleep(time.Second)
 		testutil.ReconcileOnce(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 
 		Expect(k8sClient.Get(ctx, web2Key, expDeployment)).Should(util.NotFoundMatcher{})
 
@@ -2831,6 +2843,7 @@ var _ = Describe("Test Application Controller", func() {
 
 		time.Sleep(time.Second)
 		testutil.ReconcileOnce(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 		Expect(k8sClient.Get(ctx, appKey, checkApp)).Should(BeNil())
 		Expect(checkApp.Status.Phase).Should(BeEquivalentTo(common.ApplicationRunningWorkflow))
 		Expect(k8sClient.Get(ctx, web1Key, expDeployment)).Should(BeNil())
@@ -2838,6 +2851,7 @@ var _ = Describe("Test Application Controller", func() {
 		expDeployment.Status.ReadyReplicas = 1
 		Expect(k8sClient.Status().Update(ctx, expDeployment)).Should(BeNil())
 		testutil.ReconcileOnce(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 
 		Expect(k8sClient.Get(ctx, appKey, checkApp)).Should(BeNil())
 		Expect(checkApp.Status.Phase).Should(BeEquivalentTo(common.ApplicationRunning))
@@ -2902,6 +2916,7 @@ var _ = Describe("Test Application Controller", func() {
 		Expect(k8sClient.Create(context.Background(), appwithInputOutput)).Should(BeNil())
 		appKey := types.NamespacedName{Namespace: ns.Name, Name: appwithInputOutput.Name}
 		testutil.ReconcileOnceAfterFinalizer(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 
 		expDeployment := &v1.Deployment{}
 		web1Key := types.NamespacedName{Namespace: ns.Name, Name: "myweb1"}
@@ -2920,6 +2935,7 @@ var _ = Describe("Test Application Controller", func() {
 		Expect(k8sClient.Status().Update(ctx, expDeployment)).Should(BeNil())
 
 		testutil.ReconcileOnce(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 		expDeployment = &v1.Deployment{}
 		Expect(k8sClient.Get(ctx, web1Key, expDeployment)).Should(BeNil())
 		expDeployment.Status.Replicas = 1
@@ -2984,6 +3000,7 @@ var _ = Describe("Test Application Controller", func() {
 		Expect(k8sClient.Create(context.Background(), appwithDependsOn)).Should(BeNil())
 		appKey := types.NamespacedName{Namespace: ns.Name, Name: appwithDependsOn.Name}
 		testutil.ReconcileOnceAfterFinalizer(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 
 		expDeployment := &v1.Deployment{}
 		web1Key := types.NamespacedName{Namespace: ns.Name, Name: "myweb1"}
@@ -3002,6 +3019,7 @@ var _ = Describe("Test Application Controller", func() {
 		Expect(k8sClient.Status().Update(ctx, expDeployment)).Should(BeNil())
 
 		testutil.ReconcileOnce(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 
 		expDeployment = &v1.Deployment{}
 		Expect(k8sClient.Get(ctx, web1Key, expDeployment)).Should(BeNil())
@@ -3071,6 +3089,7 @@ var _ = Describe("Test Application Controller", func() {
 		Expect(k8sClient.Create(context.Background(), appwithInputOutputDependsOn)).Should(BeNil())
 		appKey := types.NamespacedName{Namespace: ns.Name, Name: appwithInputOutputDependsOn.Name}
 		testutil.ReconcileOnceAfterFinalizer(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 
 		expDeployment := &v1.Deployment{}
 		web1Key := types.NamespacedName{Namespace: ns.Name, Name: "myweb1"}
@@ -3089,6 +3108,7 @@ var _ = Describe("Test Application Controller", func() {
 		Expect(k8sClient.Status().Update(ctx, expDeployment)).Should(BeNil())
 
 		testutil.ReconcileOnce(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 
 		expDeployment = &v1.Deployment{}
 		Expect(k8sClient.Get(ctx, web1Key, expDeployment)).Should(BeNil())
@@ -3154,6 +3174,7 @@ var _ = Describe("Test Application Controller", func() {
 		Expect(k8sClient.Create(context.Background(), app)).Should(BeNil())
 		appKey := types.NamespacedName{Namespace: ns.Name, Name: app.Name}
 		testutil.ReconcileOnceAfterFinalizer(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 		checkApp := &v1beta1.Application{}
 		Expect(k8sClient.Get(ctx, appKey, checkApp)).Should(BeNil())
 		Expect(checkApp.Status.Phase).Should(BeEquivalentTo(common.ApplicationRunning))
@@ -3182,6 +3203,7 @@ var _ = Describe("Test Application Controller", func() {
 		checkApp.Spec.Components[0].Properties = nil
 		Expect(k8sClient.Update(context.Background(), checkApp)).Should(BeNil())
 		testutil.ReconcileOnceAfterFinalizer(reconciler, reconcile.Request{NamespacedName: appKey})
+		time.Sleep(10 * time.Second)
 		checkApp = &v1beta1.Application{}
 		Expect(k8sClient.Get(ctx, appKey, checkApp)).Should(BeNil())
 		Expect(checkApp.Status.AppliedResources).Should(BeEquivalentTo([]common.ClusterObjectReference{
@@ -3911,6 +3933,7 @@ var _ = Describe("Test Application Controller", func() {
 		appWithPreDispatch.Name = "app-with-pre-dispatch"
 		appWithPreDispatch.SetNamespace(ns.Name)
 		Expect(k8sClient.Create(ctx, appWithPreDispatch)).Should(BeNil())
+		time.Sleep(10 * time.Second)
 
 		appKey := client.ObjectKey{
 			Name:      appWithPreDispatch.Name,
