@@ -129,7 +129,7 @@ var _ = Describe("Test Application with GC options", func() {
 					return errors.New("app is not in running status")
 				}
 				return nil
-			}, 3*time.Second, 300*time.Second).Should(BeNil())
+			}, 300*time.Second, 3*time.Second).Should(BeNil())
 
 			By("update app with new component name")
 			for i := 2; i <= 6; i++ {
@@ -291,7 +291,7 @@ var _ = Describe("Test Application with GC options", func() {
 					return errors.New("app is not in running status")
 				}
 				return nil
-			}, 3*time.Second, 300*time.Second).Should(BeNil())
+			}, 300*time.Second, 3*time.Second).Should(BeNil())
 
 			By("update app's component name and the properties of configmap")
 			for i := 2; i <= 6; i++ {
@@ -416,7 +416,7 @@ var _ = Describe("Test Application with GC options", func() {
 					return errors.New("app is not in running status")
 				}
 				return nil
-			}, 3*time.Second, 300*time.Second).Should(BeNil())
+			}, 300*time.Second, 3*time.Second).Should(BeNil())
 
 			By("update component with new properties")
 			for i := 2; i <= 11; i++ {

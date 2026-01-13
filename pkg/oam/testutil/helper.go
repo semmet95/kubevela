@@ -40,6 +40,7 @@ func ReconcileOnce(r reconcile.Reconciler, req reconcile.Request) {
 	if _, err := r.Reconcile(context.TODO(), req); err != nil {
 		fmt.Println(err.Error())
 	}
+	time.Sleep(5 * time.Second) // provides some time to comp services to become healthy
 }
 
 // ReconcileOnceAfterFinalizer will reconcile for finalizer

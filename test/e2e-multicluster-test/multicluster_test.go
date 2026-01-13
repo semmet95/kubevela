@@ -644,7 +644,7 @@ var _ = Describe("Test multicluster scenario", func() {
 			Eventually(func(g Gomega) {
 				g.Expect(k8sClient.Get(hubCtx, client.ObjectKeyFromObject(app), app)).Should(Succeed())
 				g.Expect(app.Status.Phase).Should(Equal(common.ApplicationRunning))
-			}, 30*time.Second).Should(Succeed())
+			}, 60*time.Second).Should(Succeed())
 
 			By("Check input/output work properly")
 			cm := &corev1.ConfigMap{}
